@@ -40,7 +40,7 @@ Student zadatak rješava u nekoliko koraka:
 
 3. Dohvatite šifrirani tekst s virtualnog servera slanjem `GET` zahtjeva na `/arp/challenge`.
 
-    Na osnovu _cookie_-ija otkrivenog u prethodnom koraku izvedite dekripcijski ključ. Ključ se izvodi primjenom _[Password-Based Key Derivation Function 2](https://en.wikipedia.org/wiki/PBKDF2)_ (`PBKDF2`). Parametre `PBKDF2` funkcije koji su korišteni za izvođenje ključa možete vidjeti u _[source code](/crypto-oracle)_-u (skripta `pbkdf2-promise.js`). S ispravnim dekripcijskim ključem možete rješiti izazov u okviru ove vježbe - dekriptirati šifrirani tekst/vic.
+    Na osnovu _cookie_-ija otkrivenog u prethodnom koraku izvedite dekripcijski ključ. Ključ se izvodi primjenom _[Password-Based Key Derivation Function 2](https://en.wikipedia.org/wiki/PBKDF2)_ (`PBKDF2`). Parametre `PBKDF2` funkcije koji su korišteni za izvođenje ključa možete vidjeti u skripti `pbkdf2-promise.js` dostupnoj u direkoriju [crypto-oracle/crypto_modules](/crypto-oracle/crypto_modules). S ispravnim dekripcijskim ključem možete rješiti izazov u okviru ove vježbe - dekriptirati šifrirani tekst/vic.
 
     Generalno, za izvođenje dekripcijskog ključa kao i za samu dekripciju šifriranog teksta možete koristiti nekakvu _crypto_ biblioteku u programskom jeziku po želji ili čak _online_ servis koji implementira PBKDF2 i AEC-CBC.
 
