@@ -14,7 +14,7 @@ U ovom repozitoriju profesor će objavljivati upute, dijelove koda, konfiguracij
 
 ## Popis vježbi
 
-- Lab 1 - ARP spoofing
+- [Lab 1 - ARP spoofing](/instructions/lab-1.md)
 - Lab 2 - ECB mode vulnerabilities
 - Lab 3 - CBC mode and predictable initialization vectors (IV)
 - Lab 4 - CTR mode and repeated IVs/counter
@@ -25,5 +25,5 @@ U ovom repozitoriju profesor će objavljivati upute, dijelove koda, konfiguracij
   
 ### Dodatne upute
 
-- Git basics
-- Running the REST server (_crypto oracle_) locally
+- [Git basics](/instructions/lab-0.md)
+- [Running the REST server (_crypto oracle_) locally](/instructions/intro.md)
