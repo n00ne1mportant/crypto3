@@ -32,7 +32,7 @@ Student zadatak rješava u nekoliko koraka:
    
     > NAPOMENA: Računalima/serverima se dodjeljuju dinamičke IP adrese (putem DHCP servera). Stoga je IP adresa studentovog servera podložna promjenama.
 
-2. Centralni server periodično šalje studentovom serveru `POST` zahtjeve na `/arp` (_unicast_ paketi). Studentov server po primitku ovog zahtjeva odgovara centralnom serveru s tajnim _cookie_-jem. Komunikacija između centralnog i studentovog servera ide u _čisto_ (nije zaštićena) ali preko mrežnog prespojnika (_network switch_). _Switch_ izolira promet između pojedinih računala; drugim rječima, _unicast_ pakete između dva računala vide samo računalo koje ih šalje i računalo kojem su paketi namjenjeni.
+2. Centralni server periodično šalje studentovom serveru `GET` zahtjeve na `/arp` (_unicast_ paketi). Studentov server po primitku ovog zahtjeva odgovara centralnom serveru s tajnim _cookie_-jem. Komunikacija između centralnog i studentovog servera ide u _čisto_ (nije zaštićena) ali preko mrežnog prespojnika (_network switch_). _Switch_ izolira promet između pojedinih računala; drugim rječima, _unicast_ pakete između dva računala vide samo računalo koje ih šalje i računalo kojem su paketi namjenjeni.
 
    ARP _spoofing_ napad omogućava napadaču preusmjeravanje _unicast_ prometa preko napadačevog računala.
 
