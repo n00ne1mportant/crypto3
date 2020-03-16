@@ -15,7 +15,7 @@ U ovom repozitoriju profesor će objavljivati upute, dijelove koda, konfiguracij
 ## Popis vježbi
 
 - [Lab 1 - ARP spoofing](/instructions/lab-1.md)
-- Lab 2 - ECB mode vulnerabilities
+- [Lab 2 - ECB mode vulnerabilities](/instructions/lab-2.md)
 - Lab 3 - CBC mode and predictable initialization vectors (IV)
 - Lab 4 - CTR mode and repeated IVs/counter
 - Lab 5 - Asymmetric crypto: RSA signatures and DH key exchange
