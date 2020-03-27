@@ -42,7 +42,7 @@ module.exports = {
       const { iv: test_iv, ciphertext } = Crypto.encrypt("CTR", {
         key,
         iv,
-        plaintext: Buffer.from(plaintext)
+        plaintext: Buffer.from(plaintext, "hex")
       });
 
       return res.json({ ciphertext });

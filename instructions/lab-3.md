@@ -1,5 +1,7 @@
 # **Kriptografija i mrežna sigurnost - Lab 3**
 
+><span style="color:red">**VAŽNO:** REST server (Crypto Oracle) je ažuriran. Stoga je važno da prije rješavanja tekuće vježbe iznova klonirate/skinete server i instalirate sve potrebene module kako je navedeno u uputama za lokalno pokretanje ([Running the REST server (_crypto oracle_) locally](./intro.md)). Zahvaljujem kolegi Antoniju Krističeviću koji mi je ukazao na mogući problem u originalnoj verziji servera.</span>
+
 ## CBC mode and predictable IVs
 
 _Cipher Block Chaining (CBC)_ **probabilistički** je način enkripcije poruka primjenom blok šifri (npr., AES). Blok šifre rade s blokovima fiksne duljine (npr., AES koristi 128 bitne blokove). Poruke dulje od nominalne duljine bloka zadane šifre enkriptiramo na način da poruku podijelimo/razbijemo na više blokova prije enkripcije.
@@ -38,19 +40,29 @@ U ovoj vježbi student će slati sljedeće HTTP zahtjeve svom _crypto oracle_-u:
 
 ```Bash
 POST /cbc/iv HTTP/1.1
-plaintext = 'moj plaintext'
+plaintext = "moj plaintext"
 ```
 
 U Node.js-u, primjenom modula `axios` navedeni zahtjev možete napraviti kako slijedi:
 
 ```js
 // Recall, you have to wrap this into a function marked as 'async'
-const response = await axios.post("http://10.0.15.x/cbc/iv", {
+const response = await axios.post("http://localhost:3000/cbc/iv", {
   plaintext: "plaintext"
 });
 ```
 
-_Crypto oracle_ (vaš REST server) uzima vaš _plaintext_, dodaje _padding_ prema PKCS#7 standardu (vidjeti primjere u nastavku), te enkriptira `plaintext + padding` u CBC modu tajnim 256 bitnim ključem (`aes-256-cbc`) i vraća vam odgovarajući _ciphertext_ zajedno s odgovarajućim inicijalizacijskim vektorom (IV).
+><span style="color:red">**VAŽNO:** Server dekodira primljeni _plaintext_ kao _hex_ string. Kao što smo diskutirali, vi ćete testirati različite _plaintext_-ove. Pri tome ćete trebati dodavati _padding_ da bi _plaintext_ proširili do 128 bita, te ga XOR-ati s odgovarajućim inicijalizacijskim vektorima. Pri slanju ovako pripremljenog _plaintext_-a koristite _hex_ enkodiranje jer server očekuje _plaintext_ u formatu _hex_ stringa. Primjer slanja ovako formatiranog _plaintext_-a dan je u nastavku:</span>
+```js
+const response = await axios.post("http://localhost:3000/cbc/iv", {
+  plaintext: "6d6f727475617279080808080808179c"
+});
+
+// za hex string reprezentaciju Buffera buff koristite buff.toString('hex')
+```
+
+
+_Crypto oracle_ (vaš REST server) enkriptira vaš _plaintext_ u CBC modu tajnim 256 bitnim ključem (`aes-256-cbc`) i vraća vam odgovarajući _ciphertext_ zajedno s odgovarajućim inicijalizacijskim vektorom (IV).
 
 ```js
 {

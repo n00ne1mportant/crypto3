@@ -53,7 +53,7 @@ module.exports = {
         const challenge = Crypto.encrypt("CBC", {
           key,
           iv,
-          plaintext: Buffer.from(plaintext)
+          plaintext: Buffer.from(plaintext, "hex")
         });
 
         return res.json(challenge);
