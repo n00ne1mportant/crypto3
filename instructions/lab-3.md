@@ -1,6 +1,6 @@
 # **Kriptografija i mrežna sigurnost - Lab 3**
 
-><span style="color:red">**VAŽNO:** REST server (Crypto Oracle) je ažuriran. Stoga je važno da prije rješavanja tekuće vježbe iznova klonirate/skinete server i instalirate sve potrebene module kako je navedeno u uputama za lokalno pokretanje ([Running the REST server (_crypto oracle_) locally](./intro.md)). Zahvaljujem kolegi Antoniju Krističeviću koji mi je ukazao na mogući problem u originalnoj verziji servera.</span>
+>**VAŽNO:** REST server (_crypto oracle_) je ažuriran. Stoga je važno da prije rješavanja tekuće vježbe iznova klonirate/skinete server i instalirate sve potrebene module kako je navedeno u uputama za lokalno pokretanje ([Running the REST server (_crypto oracle_) locally](./intro.md)). Zahvaljujem kolegi Antoniju Krističeviću koji mi je ukazao na mogući problem u originalnoj verziji servera.
 
 ## CBC mode and predictable IVs
 
@@ -52,7 +52,7 @@ const response = await axios.post("http://localhost:3000/cbc/iv", {
 });
 ```
 
-><span style="color:red">**VAŽNO:** Server dekodira primljeni _plaintext_ kao _hex_ string. Kao što smo diskutirali, vi ćete testirati različite _plaintext_-ove. Pri tome ćete trebati dodavati _padding_ da bi _plaintext_ proširili do 128 bita, te ga XOR-ati s odgovarajućim inicijalizacijskim vektorima. Pri slanju ovako pripremljenog _plaintext_-a koristite _hex_ enkodiranje jer server očekuje _plaintext_ u formatu _hex_ stringa. Primjer slanja ovako formatiranog _plaintext_-a dan je u nastavku:</span>
+>**VAŽNO:** Server dekodira primljeni _plaintext_ kao _hex_ string. Kao što smo diskutirali, vi ćete testirati različite _plaintext_-ove. Pri tome ćete trebati dodavati _padding_ da bi _plaintext_ proširili do 128 bita, te ga XOR-ati s odgovarajućim inicijalizacijskim vektorima. Pri slanju ovako pripremljenog _plaintext_-a koristite _hex_ enkodiranje jer server očekuje _plaintext_ u formatu _hex_ stringa. Primjer slanja ovako formatiranog _plaintext_-a dan je u nastavku:
 ```js
 const response = await axios.post("http://localhost:3000/cbc/iv", {
   plaintext: "6d6f727475617279080808080808179c"
@@ -61,15 +61,18 @@ const response = await axios.post("http://localhost:3000/cbc/iv", {
 // za hex string reprezentaciju Buffera buff koristite buff.toString('hex')
 ```
 
+_Crypto oracle_ (vaš REST server) enkriptira vaš _plaintext_ u CBC modu tajnim 256 bitnim ključem (`aes-256-cbc`) i vraća vam odgovarajući _ciphertext_ zajedno s odgovarajućim inicijalizacijskim vektorom (IV). Pri tome, _crpyto oracle_ dodaje potreban _padding_ vašem _plaintext_-u. 
 
-_Crypto oracle_ (vaš REST server) enkriptira vaš _plaintext_ u CBC modu tajnim 256 bitnim ključem (`aes-256-cbc`) i vraća vam odgovarajući _ciphertext_ zajedno s odgovarajućim inicijalizacijskim vektorom (IV).
+**Ako je vaš _plaintext_ dug 128 bita (16B) kao u primjeru iznad, _oracle_ će dodati cijeli novi 128 bitni blok kao _padding_ vašem 128 bitnom _plaintext_-u. Zbog toga će te dobiti u odgovoru od servera _ciphertext_ dug dva (2) 128 bitna bloka (vidi primjer u nastavku).**
 
 ```js
 {
     "iv":"1a2c3c2a9658864a6545174945f59583",
-    "ciphertext":"896633eee8bbfbed8447d9b49ce5b595"
+    "ciphertext":"896633eee8bbfbed8447d9b49ce5b595896633eee8bbfbed8447d9b49ce5b595"
 }
 ```
+
+
 
 Cilj ove vježbe je otkriti tajnu riječ koja vam je nasumično dodjeljena iz rječnika _wordlist.txt_. Rječnik je javan; možete ga dohvatiti kako slijedi:
 
@@ -90,7 +93,7 @@ GET /cbc/iv/challenge HTTP/1.1
 }
 ```
 
-Ovaj _ciphertext_ (_challenge_) i IV rezultat su enkripcije tajne riječi u CBC modu.
+Ovaj _ciphertext_ (_challenge_) i inicijalizacijski vektor (_IV_) rezultat su enkripcije tajne riječi u CBC modu. **Inicijalizacijski vektor (_IV_) za _challenge_ je biran nasumično (_random_), dok se svi ostali _IV_-ovi izvode iz ovog nasumičnog _IV_-a na predvidljiv način ("na koji način" trebate otkriti sami).**
 
 ### Kratki savjeti
 

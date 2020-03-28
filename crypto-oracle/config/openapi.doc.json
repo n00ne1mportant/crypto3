@@ -506,8 +506,8 @@
                 "properties": {
                   "plaintext": {
                     "type": "string",
-                    "description": "A word (from the given wordlist) to be encrypted.",
-                    "example": "aardvark"
+                    "description": "Hex encoded plaintext to be encrypted.",
+                    "example": "6d6f727475617279080808080808179c"
                   }
                 }
               }
@@ -579,8 +579,8 @@
                 "properties": {
                   "plaintext": {
                     "type": "string",
-                    "description": "A plaintext to be encrypted.",
-                    "example": "encrypt me"
+                    "description": "Hex encoded plaintext `hello` to be encrypted.",
+                    "example": "68656c6c6f"
                   }
                 }
               }
