@@ -40,16 +40,7 @@ U ovoj vježbi student će slati sljedeće HTTP zahtjeve svom _crypto oracle_-u:
 
 ```Bash
 POST /cbc/iv HTTP/1.1
-plaintext = "moj plaintext"
-```
-
-U Node.js-u, primjenom modula `axios` navedeni zahtjev možete napraviti kako slijedi:
-
-```js
-// Recall, you have to wrap this into a function marked as 'async'
-const response = await axios.post("http://localhost:3000/cbc/iv", {
-  plaintext: "plaintext"
-});
+{plaintext: "moj plaintext"}
 ```
 
 >**VAŽNO:** Server dekodira primljeni _plaintext_ kao _hex_ string. Kao što smo diskutirali, vi ćete testirati različite _plaintext_-ove. Pri tome ćete trebati dodavati _padding_ da bi _plaintext_ proširili do 128 bita, te ga XOR-ati s odgovarajućim inicijalizacijskim vektorima. Pri slanju ovako pripremljenog _plaintext_-a koristite _hex_ enkodiranje jer server očekuje _plaintext_ u formatu _hex_ stringa. Primjer slanja ovako formatiranog _plaintext_-a dan je u nastavku:
@@ -63,9 +54,15 @@ const response = await axios.post("http://localhost:3000/cbc/iv", {
 
 _Crypto oracle_ (vaš REST server) enkriptira vaš _plaintext_ u CBC modu tajnim 256 bitnim ključem (`aes-256-cbc`) i vraća vam odgovarajući _ciphertext_ zajedno s odgovarajućim inicijalizacijskim vektorom (IV). Pri tome, _crpyto oracle_ dodaje potreban _padding_ vašem _plaintext_-u. 
 
-**Ako je vaš _plaintext_ dug 128 bita (16B) kao u primjeru iznad, _oracle_ će dodati cijeli novi 128 bitni blok kao _padding_ vašem 128 bitnom _plaintext_-u. Zbog toga će te dobiti u odgovoru od servera _ciphertext_ dug dva (2) 128 bitna bloka (vidi primjer u nastavku).**
+**Ako je vaš _plaintext_ dug 128 bita (16B) kao u primjeru iznad, _oracle_ će dodati cijeli novi 128 bitni blok kao _padding_ vašem 128 bitnom _plaintext_-u. Zbog toga će te dobiti u odgovoru od servera _ciphertext_ dug dva (2) 128 bitna bloka iako je _plaintext_ dug samo jedan (1) 128 bitni blok (vidi primjer u nastavku).**
 
 ```js
+// Request
+const response = await axios.post("http://localhost:3000/cbc/iv", {
+  plaintext: "6d6f727475617279080808080808179c"
+});
+
+// Response
 {
     "iv":"1a2c3c2a9658864a6545174945f59583",
     "ciphertext":"896633eee8bbfbed8447d9b49ce5b595896633eee8bbfbed8447d9b49ce5b595"
