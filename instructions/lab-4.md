@@ -19,7 +19,7 @@ U ovoj vježi pokazat ćemo ranjivost CTR enkripcijskog moda u slučaju kad nije
 
 Ranjivost _crypto oracle_ u ovoj vježbi proizlazi iz činjenice da se **brojač bira (nasumično) iz vrlog ograničenog/malog skupa brojeva**. Posljedica opisanog načina generiranja brojača za CTR mod je ta da će se nakon određenog broja enkripcija brojač ponaviti što napadaču omogućuje dekripciju _ciphertext_-a bez poznavanja enkripcijskog ključa. Prosječan broj poruka koje treba enkriptirati prije ponavljanja brojača student može procjeniti uvidom u skriptu [crypto-oracle/controllers/ctr.controller.js](/crypto-oracle/controllers/ctr.controller.js).
 
-Zadatak studenta je iskoristiti gore opisani propust u _crypto oracle_-u i dekriptirati vic o Chuck Norris-u koji je ovaj put enkriptiran u CTR modu s istim enkripcijskim ključem kao i poslani studentovi _plaintext_-ovi. _U osnovi, nakon što student pošalje dovoljan broj poruka serveru na enkripciju u CTR modu, jedna od poruka će biti enkriptirana s istim _counter_-om kao i vic o Chuck Noriss-u._ 
+Zadatak studenta je iskoristiti gore opisani propust u _crypto oracle_-u i dekriptirati vic o Chuck Norris-u koji je ovaj put enkriptiran u CTR modu s istim enkripcijskim ključem kao i poslani studentovi _plaintext_-ovi. **U osnovi, nakon što student pošalje dovoljan broj poruka serveru na enkripciju u CTR modu, jedna od poruka biti će enkriptirana s istim _counter_-om kao i vic o Chuck Norris-u.**
 
 ### Opis REST API-ja
 
