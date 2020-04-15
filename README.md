@@ -18,7 +18,7 @@ U ovom repozitoriju profesor će objavljivati upute, dijelove koda, konfiguracij
 - [Lab 2 - ECB mode vulnerabilities](/instructions/lab-2.md)
 - [Lab 3 - CBC mode and predictable initialization vectors (IV)](/instructions/lab-3.md)
 - [Lab 4 - CTR mode and repeated counters](/instructions/lab-4.md)
-- Lab 5 - Asymmetric crypto: RSA signatures and DH key exchange
+- [Lab 5 - Asymmetric crypto: RSA signatures and DH key exchange](/instructions/lab-5.md)
 - Lab 6 - Securing end-2-end communication
 - Lab 7 - Certificate authorities (CAs) and TLS protocol
 - Lab 8 - SSH tunneling
