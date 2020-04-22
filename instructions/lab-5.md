@@ -167,7 +167,7 @@ console.log(is_signature_ok)
     console.log("Public DH key:", clientDH.getPublicKey("hex"));
     ```
 
-2. U našem protokolu, klijent primi javni DH ključ od servera (npr. `serverPublicDHKey`; `serverPublicDHKey` je `hex` enkodiran). Klijent računa djeljenu tajnu na osnovu DH kako slijedi:
+2. U našem protokolu, klijent primi javni DH ključ od servera. Pohranimo serverov javni DH ključ u varijablu `serverPublicDHKey` (serverov javni DH ključ je `hex` enkodiran). Klijent računa djeljenu tajnu sa severom kako slijedi:
 
     ```js
     //---------------------------------------
@@ -175,7 +175,7 @@ console.log(is_signature_ok)
     // between the server and the client.
     //---------------------------------------
     const sharedDHKey = clientDH.computeSecret(
-    Buffer.from(serverDHPublicKey, "hex")
+        Buffer.from(serverDHPublicKey, "hex")
     );
 
     // Print the shared key
