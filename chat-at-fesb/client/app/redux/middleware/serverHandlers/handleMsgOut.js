@@ -1,6 +1,8 @@
 // Info: config is an alias to "config/default.json" file
 // (the alias is set in webpack.config.js).
 import { Constants } from "config";
+import Crypto from 'crypto'
+import { encrypt } from '../../../services/security/CryptoProvider'
 
 import serverAPI from "app/services/server-api/ServerAPI.js";
 import { msgSent } from "app/redux/actions/clientActions.js";
@@ -22,20 +24,51 @@ export default ({ getState, dispatch }, next, action) => {
   //===================================================
   // Try to load an encryption key for this client id
   //===================================================
-  const key = loadKey(id, credentials);
+  const rawKey = loadKey(id, credentials)
+  const key = !!rawKey ? new Buffer.from(rawKey).toString('hex') : rawKey
 
   //===================================================
   // If the encryption key is successfully loaded,
   // it is implied that all outgoing messages from this
   // client will be encrypted with that key.
   //===================================================
-  const msg = {
-    type: MsgType.BROADCAST,
-    id,
-    nickname,
-    timestamp: Date.now(),
-    content: key ? `ENCRYPTED(${action.payload})` : action.payload,
-  };
+
+  const cbcEncrypt = (plaintext, cbcKey, iv) => encrypt('CBC', {
+    plaintext,
+    iv,
+    key: cbcKey
+  })
+
+  let msg
+
+  if (key) {
+    const encryptionKey = new Buffer.from(key.substring(0, key.length / 2), 'hex')
+    const hmacSignKey = new Buffer.from(key.substring(key.length / 2), 'hex')
+
+    const encryptedO = cbcEncrypt(action.payload, encryptionKey, Crypto.randomBytes(16))
+    const hmac = Crypto.createHmac('sha256', hmacSignKey)
+
+    msg = {
+      type: MsgType.BROADCAST,
+      id,
+      nickname,
+      timestamp: Date.now(),
+      content: encryptedO.ciphertext,
+      iv: encryptedO.iv,
+    };
+
+    hmac.update(JSON.stringify(msg))
+    msg.authTag = hmac.digest().toString('hex')
+
+  } else {
+    msg = {
+      type: MsgType.BROADCAST,
+      id,
+      nickname,
+      timestamp: Date.now(),
+      content: action.payload,
+    };
+  }
 
   //===================================================
   // The resulting protected (CBC + HMAC) message
