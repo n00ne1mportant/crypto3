@@ -2,6 +2,8 @@ import { serverMsg } from "app/redux/actions/serverActions.js";
 import { JSONparse } from "app/utils/safeJSON.js";
 import { clientError } from "app/redux/actions/clientActions.js";
 import { loadKey } from "./utils.js";
+import { decrypt } from '../../../services/security/CryptoProvider'
+import Crypto from 'crypto'
 
 export default ({ getState, dispatch }, next, action) => {
   const {
@@ -29,10 +31,11 @@ export default ({ getState, dispatch }, next, action) => {
     // it is implied that all incoming messages from this
     // remote client will be encrypted with that key.
     // So, we decrypt the messages before reading them.
-    //===================================================
+    //===================================================  
+
     if (key) {
-      msg = { ...msg };
-      msg.content = `DECRYPTED(${msg.content})`;
+      const [iv, ciphertext, tag] = msg.content.split('-')
+      msg.content = decrypt('GCM', { key, ciphertext, iv, tag });
     }
   }
 
