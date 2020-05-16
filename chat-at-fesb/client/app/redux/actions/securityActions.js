@@ -37,7 +37,6 @@ export const generateKey = (payload) => (dispatch) => {
   CryptoProvider.generateKey("PBKDF2", {
     secret: payload.secret,
     salt: payload.id,
-    size: 64
   })
     .then(key =>
       dispatch({
