@@ -5,6 +5,8 @@ import { Constants } from "config";
 import serverAPI from "app/services/server-api/ServerAPI.js";
 import { msgSent } from "app/redux/actions/clientActions.js";
 import { loadKey } from "./utils.js";
+import { encrypt } from '../../../services/security/CryptoProvider'
+import Crypto from 'crypto'
 
 const { MsgType } = Constants;
 
@@ -29,13 +31,24 @@ export default ({ getState, dispatch }, next, action) => {
   // it is implied that all outgoing messages from this
   // client will be encrypted with that key.
   //===================================================
+
+  const encryptGCM = (plaintext, key, iv = Crypto.randomBytes(16)) => {
+    return !!key ? encrypt('GCM', {
+      plaintext,
+      key,
+      iv,
+    }) : {}
+  }
+
+  const { iv, ciphertext, tag } = encryptGCM(action.payload, key)
+
   const msg = {
     type: MsgType.BROADCAST,
     id,
     nickname,
     timestamp: Date.now(),
-    content: key ? `ENCRYPTED(${action.payload})` : action.payload,
-  };
+    content: key ? `${iv}-${ciphertext}-${tag}` : action.payload,
+  }
 
   //===================================================
   // The resulting protected (CBC + HMAC) message
