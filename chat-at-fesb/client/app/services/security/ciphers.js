@@ -1,33 +1,33 @@
 const crypto = require('crypto')
 
-function encrypt({ 
-    mode, 
-    key, 
-    iv=Buffer.alloc(0), 
-    plaintext, 
-    padding=true,
-    inputEncoding='utf8',
-    outputEncoding='hex' 
+function encrypt({
+    mode,
+    key,
+    iv = Buffer.alloc(0),
+    plaintext,
+    padding = true,
+    inputEncoding = 'utf8',
+    outputEncoding = 'hex'
 }) {
     const cipher = crypto.createCipheriv(mode, key, iv)
     cipher.setAutoPadding(padding)
     let ciphertext = cipher.update(plaintext, inputEncoding, outputEncoding)
     ciphertext += cipher.final(outputEncoding)
 
-    return { 
-        iv: iv.toString(outputEncoding), 
-        ciphertext 
+    return {
+        iv: iv.toString(outputEncoding),
+        ciphertext
     }
 }
 
-function decrypt({ 
-    mode, 
-    key, 
-    iv=Buffer.alloc(0), 
-    ciphertext, 
-    padding=true,
-    inputEncoding='hex',
-    outputEncoding='utf8' 
+function decrypt({
+    mode,
+    key,
+    iv = Buffer.alloc(0),
+    ciphertext,
+    padding = true,
+    inputEncoding = 'hex',
+    outputEncoding = 'utf8'
 }) {
     const decipher = crypto.createDecipheriv(mode, key, iv)
     decipher.setAutoPadding(padding)
@@ -37,43 +37,35 @@ function decrypt({
     return { plaintext }
 }
 
-function encrypt_GCM({  
-    key, 
-    iv, 
+function encrypt_GCM({
+    key,
+    iv,
     plaintext,
-    inputEncoding='utf8',
-    outputEncoding='hex' 
+    inputEncoding = 'utf8',
+    outputEncoding = 'hex'
 }) {
     const cipher = crypto.createCipheriv('aes-256-gcm', key, iv)
     let ciphertext = cipher.update(plaintext, inputEncoding, outputEncoding)
     ciphertext += cipher.final(outputEncoding)
-    const tag  = cipher.getAuthTag()
+    const tag = cipher.getAuthTag()
 
-    return { 
+    return {
         iv: iv.toString(outputEncoding),
-        ciphertext, 
+        ciphertext,
         tag: tag.toString(outputEncoding)
     }
 }
 
-function decrypt_GCM({ 
-    key, 
-    msgContent, 
-    inputEncoding='hex',
-    outputEncoding='utf8' 
+function decrypt_GCM({
+    key,
+    iv,
+    tag,
+    ciphertext,
+    inputEncoding = 'hex',
+    outputEncoding = 'utf8'
 }) {
-
-    // We expect 'hex' input encoding
-    const iv_length = 24 // 'hex' (96 bits)
-    const tag_length = 32 // 'hex' (128 bits)
-    const ciphertext_length = msgContent.length - tag_length
-
-    const iv = Buffer.from(msgContent.slice(0, iv_length), 'hex')
-    const ciphertext = msgContent.slice(iv_length, ciphertext_length)
-    const tag = Buffer.from(msgContent.slice(ciphertext_length), 'hex')
-
-    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv)
-    decipher.setAuthTag(tag)
+    const decipher = crypto.createDecipheriv('aes-256-gcm', key, new Buffer.from(iv, inputEncoding))
+    decipher.setAuthTag(new Buffer.from(tag, inputEncoding))
     let plaintext = decipher.update(ciphertext, inputEncoding, outputEncoding)
     plaintext += decipher.final(outputEncoding)
 
@@ -96,6 +88,6 @@ exports.ctr = ({
 })
 
 exports.gcm = ({
-    encrypt: params => encrypt_GCM({...params}),
-    decrypt: params => decrypt_GCM({...params})
+    encrypt: params => encrypt_GCM({ ...params }),
+    decrypt: params => decrypt_GCM({ ...params })
 })
